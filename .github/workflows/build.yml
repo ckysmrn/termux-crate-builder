@@ -82,7 +82,7 @@ jobs:
       - name: Build with cargo-ndk
         working-directory: ./external-crate
         env:
-          ANDROID_NDK_HOME: ${{ step.setup-ndk.outputs.ndk-path }}
+          ANDROID_NDK_HOME: ${{ steps.setup-ndk.outputs.ndk-path }}
         run: |
           ARGS="build --release"
           if [ "${{ github.event.inputs.no_default_features }}" = "true" ]; then
