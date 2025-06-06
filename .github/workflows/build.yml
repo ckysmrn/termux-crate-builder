@@ -3,8 +3,8 @@ name: Build Rust Crate for Termux and Create .deb Packages
 on:
   workflow_dispatch:
     inputs:
-      repo_url:
-        description: 'Git repository URL'
+      crate:
+        description: 'Crate name from crates.io OR Git repository URL'
         required: true
       ref:
         description: 'Git reference (branch, tag, commit)'
@@ -42,12 +42,23 @@ jobs:
         run: |
           sudo apt update
           sudo apt install -y curl unzip tar build-essential gcc pkg-config fakeroot
-
-      - name: Clone External Repository
+          cargo install cargo-ndk
+          cargo install cargo-edit
+      - name: Prepare project
         run: |
-          git clone ${{ github.event.inputs.repo_url }} external-crate
-          cd external-crate
-          git checkout ${{ github.event.inputs.ref }}
+          mkdir -p external-crate
+          if [[ "${{ github.event.inputs.crate }}" =~ ^https?:// ]]; then
+            echo "Detected Git Repository"
+            git clone ${{ github.event.inputs.crate }} external-crate
+          else
+            echo "Detected crates.io crate"
+            cargo new wrapper --bin
+            cd wrapper
+            cargo add ${{ github.event.inputs.crate }}
+            echo "BIN_NAME=${{ github.event.inputs.crate }}" >> $GITHUB_ENV
+            cd ..
+            mv wrapper external-crate
+          fi
 
       - name: Set up Rust
         uses: actions-rs/toolchain@v1
@@ -55,15 +66,17 @@ jobs:
           toolchain: stable
           profile: minimal
           override: true
-      - name: Add Android target
-        run: rustup target add ${{ matrix.target }}
-      - name: Install cargo-ndk
-        run: cargo install cargo-ndk
-      - name: Download Android NDK
-        run: |
-          curl -L https://dl.google.com/android/repository/android-ndk-r26d-linux.zip -o ndk.zip
-          unzip -q ndk.zip
-          echo "ANDROID_NDK=$(pwd)/android-ndk-r26d" >> $GITHUB_ENV
+          target: ${{ matrix.target }}
+      #- name: Add Android target
+      #  run: rustup target add ${{ matrix.target }}
+      - name: Setup Android NDK
+        uses: actions/setup-ndk@v3
+        with:
+          ndk-version: r26d
+        #run: |
+        #  curl -L https://dl.google.com/android/repository/android-ndk-r26d-linux.zip -o ndk.zip
+        #  unzip -q ndk.zip
+        #  echo "ANDROID_NDK=$(pwd)/android-ndk-r26d" >> $GITHUB_ENV
 
       - name: Build with cargo-ndk
         working-directory: ./external-crate
@@ -80,14 +93,25 @@ jobs:
           if [ -n "${{ github.event.inputs.features }}" ]; then
             ARGS="$ARGS --features '${{ github.event.inputs.features }}'"
           fi
-
           echo "Building with: cargo ndk -t ${{ matrix.target }} -o ./target/ndk-build $ARGS"
           eval cargo ndk -t ${{ matrix.target }} -o ./target/ndk-build $ARGS
 
+      - name: Detect binary name (for crates.io)
+        if: env.BIN_NAME != ''
+        working-directory: ./external-crate
+        run: echo "Detected BIN_NAME=${BIN_NAME}"
+
+      - name: Auto detect binary name (for Git repo)
+        if: env.BIN_NAME == ''
+        working-directory: ./external-crate
+        run: |
+          BIN=$(basename $(find ./target/ndk-build/${{ matrix.target }}/release -maxdepth 1 -type f -executable | head -n1))
+          echo "BIN_NAME=$BIN" >> $GITHUB_ENV
+          echo "Detected BIN_NAME=$BIN"
       - name: Package .deb
         working-directory: ./external-crate
         run: |
-          BIN_NAME=$(basename $(find ./target/ndk-build/${{ matrix.target }}/release -maxdepth 1 -type f -executable))
+          #BIN_NAME=$(basename $(find ./target/ndk-build/${{ matrix.target }}/release -maxdepth 1 -type f -executable))
           PACKAGE_NAME=${BIN_NAME}
           VERSION=${{ github.event.inputs.release_tag }}
           ARCH=$(echo "${{ matrix.target }}" | sed 's/-linux-android//; s/armv7/armhf/; s/aarch64/arm64/; s/x86_64/amd64/')
