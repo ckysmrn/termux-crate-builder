@@ -38,16 +38,15 @@ jobs:
           git checkout ${{ github.event.inputs.ref }}
 
       - name: Set up Rust
-        uses: actions/setup-rust@v1
+        uses: actions-rs/toolchain@v1
         with:
-          rust-version: stable
-
+          toolchain: stable
+          profile: minimal
+          override: true
       - name: Add Android target
         run: rustup target add ${{ matrix.target }}
-
       - name: Install cargo-ndk
         run: cargo install cargo-ndk
-
       - name: Download Android NDK
         run: |
           curl -L https://dl.google.com/android/repository/android-ndk-r26d-linux.zip -o ndk.zip
