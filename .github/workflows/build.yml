@@ -74,14 +74,16 @@ jobs:
           cp ./target/ndk-build/${{ matrix.target }}/release/$BIN_NAME deb-pkg/data/data/com.termux/files/usr/bin/$BIN_NAME
           chmod 755 deb-pkg/data/data/com.termux/files/usr/bin/$BIN_NAME
 
-          cat <<EOF > deb-pkg/DEBIAN/control
-Package: $PACKAGE_NAME
-Version: ${VERSION#v}
-Architecture: $ARCH
-Maintainer: GitHub Actions
-Description: Termux build of $PACKAGE_NAME for $ARCH
-EOF;
-
+          {
+            echo 'CONTROL<<EOF'
+            echo "Package: $PACKAGE_NAME"
+            echo "Version: ${VERSION#v}"
+            echo "Architecture: $ARCH"
+            echo "Maintainer: GitHub Actions"
+            echo "Description: Termux build of $PACKAGE_NAME for $ARCH"
+            echo EOF
+          } >> $GITHUB_ENV
+          echo $CONTROL > deb-pkg/DEBIAN/control
           fakeroot dpkg-deb --build deb-pkg ${PACKAGE_NAME}_${VERSION#v}_${ARCH}.deb
           mkdir -p ../artifacts
           mv ${PACKAGE_NAME}_${VERSION#v}_${ARCH}.deb ../artifacts/
