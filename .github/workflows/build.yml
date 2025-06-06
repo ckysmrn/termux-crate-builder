@@ -1,0 +1,111 @@
+name: Build Rust Crate for Termux and Create .deb Packages
+
+on:
+  workflow_dispatch:
+    inputs:
+      repo_url:
+        description: 'Git repository URL'
+        required: true
+      ref:
+        description: 'Git reference (branch, tag, commit)'
+        default: 'main'
+        required: false
+      release_tag:
+        description: 'Tag to create in release (e.g. v1.0.0)'
+        required: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        target:
+          - aarch64-linux-android
+          - armv7-linux-androideabi
+          - x86_64-linux-android
+
+    steps:
+      - name: Install Dependencies
+        run: |
+          sudo apt update
+          sudo apt install -y curl unzip tar build-essential gcc pkg-config fakeroot
+
+      - name: Clone External Repository
+        run: |
+          git clone ${{ github.event.inputs.repo_url }} external-crate
+          cd external-crate
+          git checkout ${{ github.event.inputs.ref }}
+
+      - name: Set up Rust
+        uses: actions/setup-rust@v1
+        with:
+          rust-version: stable
+
+      - name: Add Android target
+        run: rustup target add ${{ matrix.target }}
+
+      - name: Install cargo-ndk
+        run: cargo install cargo-ndk
+
+      - name: Download Android NDK
+        run: |
+          curl -L https://dl.google.com/android/repository/android-ndk-r26d-linux.zip -o ndk.zip
+          unzip -q ndk.zip
+          echo "ANDROID_NDK=$(pwd)/android-ndk-r26d" >> $GITHUB_ENV
+
+      - name: Build with cargo-ndk
+        working-directory: ./external-crate
+        env:
+          ANDROID_NDK_HOME: ${{ env.ANDROID_NDK }}
+        run: |
+          cargo ndk -t ${{ matrix.target }} -o ./target/ndk-build build --release
+
+      - name: Package .deb
+        working-directory: ./external-crate
+        run: |
+          BIN_NAME=$(basename $(find ./target/ndk-build/${{ matrix.target }}/release -maxdepth 1 -type f -executable))
+          PACKAGE_NAME=${BIN_NAME}
+          VERSION=${{ github.event.inputs.release_tag }}
+          ARCH=$(echo "${{ matrix.target }}" | sed 's/-linux-android//; s/armv7/armhf/; s/aarch64/arm64/; s/x86_64/amd64/')
+
+          mkdir -p deb-pkg/DEBIAN
+          mkdir -p deb-pkg/data/data/com.termux/files/usr/bin
+          cp ./target/ndk-build/${{ matrix.target }}/release/$BIN_NAME deb-pkg/data/data/com.termux/files/usr/bin/$BIN_NAME
+          chmod 755 deb-pkg/data/data/com.termux/files/usr/bin/$BIN_NAME
+
+          cat <<EOF > deb-pkg/DEBIAN/control
+Package: $PACKAGE_NAME
+Version: ${VERSION#v}
+Architecture: $ARCH
+Maintainer: GitHub Actions
+Description: Termux build of $PACKAGE_NAME for $ARCH
+EOF
+
+          fakeroot dpkg-deb --build deb-pkg ${PACKAGE_NAME}_${VERSION#v}_${ARCH}.deb
+          mkdir -p ../artifacts
+          mv ${PACKAGE_NAME}_${VERSION#v}_${ARCH}.deb ../artifacts/
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: deb-${{ matrix.target }}
+          path: external-crate/artifacts/*.deb
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download all .deb artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: dist
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.event.inputs.release_tag }}
+          name: "Termux release ${{ github.event.inputs.release_tag }}"
+          files: dist/**/**/*.deb
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
