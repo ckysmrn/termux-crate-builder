@@ -85,8 +85,12 @@ jobs:
           ANDROID_NDK_HOME: ${{ steps.setup-ndk.outputs.ndk-path }}
         run: |
           echo $ANDROID_NDK_HOME
+          echo $PWD
           ls -lah
-          ls -lah ./*/
+          echo "----"
+          ls -lah ./*
+          echo "Contents of $PWD/Cargo.toml"
+          cat Cargo.toml
           ARGS="build --release"
           if [ "${{ github.event.inputs.no_default_features }}" = "true" ]; then
             ARGS="$ARGS --no-default-features"
