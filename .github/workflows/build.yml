@@ -41,7 +41,7 @@ jobs:
       - name: Install Dependencies
         run: |
           sudo apt update
-          sudo apt install -y curl unzip tar build-essential gcc pkg-config fakeroot
+          sudo apt install -y curl unzip tar build-essential gcc pkg-config fakeroot openssl-devel
           cargo install cargo-ndk
           cargo install cargo-edit
       - name: Prepare project
