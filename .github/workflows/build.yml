@@ -70,7 +70,8 @@ jobs:
       #- name: Add Android target
       #  run: rustup target add ${{ matrix.target }}
       - name: Setup Android NDK
-        uses: actions/setup-ndk@v3
+        id: setup-ndk
+        uses: nttld/setup-ndk@v1
         with:
           ndk-version: r26d
         #run: |
@@ -81,7 +82,7 @@ jobs:
       - name: Build with cargo-ndk
         working-directory: ./external-crate
         env:
-          ANDROID_NDK_HOME: ${{ env.ANDROID_NDK }}
+          ANDROID_NDK_HOME: ${{ step.setup-ndk.outputs.ndk-path }}
         run: |
           ARGS="build --release"
           if [ "${{ github.event.inputs.no_default_features }}" = "true" ]; then
