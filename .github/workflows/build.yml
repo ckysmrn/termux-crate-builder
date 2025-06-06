@@ -74,7 +74,7 @@ jobs:
         uses: nttld/setup-ndk@v1
         with:
           ndk-version: r26d
-          local-cache: true
+          local-cache: false
         #run: |
         #  curl -L https://dl.google.com/android/repository/android-ndk-r26d-linux.zip -o ndk.zip
         #  unzip -q ndk.zip
@@ -91,7 +91,9 @@ jobs:
           echo "----"
           ls -lah ./*
           echo "Contents of $PWD/Cargo.toml"
-          cat Cargo.toml
+          cat Cargo.toml 2> /dev/null
+          echo "Contents of $PWD/wrapper/Cargo.toml"
+          cat wrapper/Cargo.toml 2> /dev/null
           ARGS="build --release"
           if [ "${{ github.event.inputs.no_default_features }}" = "true" ]; then
             ARGS="$ARGS --no-default-features"
