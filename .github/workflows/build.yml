@@ -13,6 +13,18 @@ on:
       release_tag:
         description: 'Tag to create in release (e.g. v1.0.0)'
         required: true
+      features:
+        description: 'Cargo features (space-separated)'
+        default: ''
+        required: false
+      no_default_features:
+        description: 'Disable default features?'
+        type: boolean
+        default: false
+      all_features:
+        description: 'Enable all features?'
+        type: boolean
+        default: false
 
 jobs:
   build:
