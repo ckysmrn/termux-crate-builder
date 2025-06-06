@@ -80,7 +80,7 @@ Version: ${VERSION#v}
 Architecture: $ARCH
 Maintainer: GitHub Actions
 Description: Termux build of $PACKAGE_NAME for $ARCH
-EOF
+EOF;
 
           fakeroot dpkg-deb --build deb-pkg ${PACKAGE_NAME}_${VERSION#v}_${ARCH}.deb
           mkdir -p ../artifacts
