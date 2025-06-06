@@ -90,10 +90,14 @@ jobs:
           ls -lah
           echo "----"
           ls -lah ./*
-          echo "Contents of $PWD/Cargo.toml"
-          cat Cargo.toml 2> /dev/null
-          echo "Contents of $PWD/wrapper/Cargo.toml"
-          cat wrapper/Cargo.toml 2> /dev/null
+          if [[ -f "Cargo.toml" ]]; then
+            echo "Content of Cargo.toml"
+            cat Cargo.toml
+          fi
+          if [[ -f "wrapper/Cargo.toml" ]]; then
+            echo "Content of wrapper/Cargo.toml"
+            cat wrapper/Cargo.toml
+          fi
           ARGS="build --release"
           if [ "${{ github.event.inputs.no_default_features }}" = "true" ]; then
             ARGS="$ARGS --no-default-features"
