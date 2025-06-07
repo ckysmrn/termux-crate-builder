@@ -59,7 +59,7 @@ jobs:
             cd ..
             mv wrapper external-crate
           fi
-
+          dpkg -L libssl-dev
       - name: Set up Rust
         uses: actions-rs/toolchain@v1
         with:
