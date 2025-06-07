@@ -50,9 +50,6 @@ jobs:
           - arch: x86
             abi: x86
             target: i686-linux-android
-      uses: ckysmrn/termux-crate-builder/.github/workflows/build-openssl.yaml@main
-      with:
-        version: '0.10'
 
     steps:
       - name: Install Dependencies
@@ -97,6 +94,10 @@ jobs:
         #  curl -L https://dl.google.com/android/repository/android-ndk-r26d-linux.zip -o ndk.zip
         #  unzip -q ndk.zip
         #  echo "ANDROID_NDK=$(pwd)/android-ndk-r26d" >> $GITHUB_ENV
+      - name: Build OpenSSL
+        uses: ./.gitHub/workflows/build-openssl.yaml
+        with:
+          version: '3.1.4'
       - name: Build with cargo-ndk
         working-directory: ./external-crate
         env:
