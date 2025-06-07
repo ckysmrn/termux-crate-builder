@@ -69,13 +69,13 @@ jobs:
           target: ${{ matrix.target }}
       #- name: Add Android target
       #  run: rustup target add ${{ matrix.target }}
-      - name: Setup Android NDK
-        id: setup-ndk
-        uses: nttld/setup-ndk@v1
-        with:
-          ndk-version: r26d
-          local-cache: false
-          add-to-path: true
+      #- name: Setup Android NDK
+      #  id: setup-ndk
+      #  uses: nttld/setup-ndk@v1
+      #  with:
+      #    ndk-version: r26d
+      #    local-cache: false
+      #    add-to-path: true
         #run: |
         #  curl -L https://dl.google.com/android/repository/android-ndk-r26d-linux.zip -o ndk.zip
         #  unzip -q ndk.zip
