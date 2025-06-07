@@ -83,8 +83,9 @@ jobs:
       - name: Build with cargo-ndk
         working-directory: ./external-crate
         env:
-          OPENSSL_DIR: /usr/include/openssl
-          OPENSSL_INCLUDE_DIR: /usr/include/openssl
+          OPENSSL_DIR: /usr/include/openssl/
+          OPENSSL_INCLUDE_DIR: /usr/include/
+          RUST_BACKTRACE: 1
         #  ANDROID_NDK_HOME: ${{ steps.setup-ndk.outputs.ndk-path }}
         run: |
           echo $ANDROID_NDK_HOME
