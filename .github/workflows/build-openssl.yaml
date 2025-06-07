@@ -46,6 +46,7 @@ jobs:
 
       - name: Set up Android NDK
         uses: nttld/setup-ndk@v1
+        id: setup-ndk
         with:
           ndk-version: r26d
           add-to-path: true
@@ -61,11 +62,10 @@ jobs:
           echo "API=24" >> $GITHUB_ENV
           echo "TOOLCHAIN=$ANDROID_NDK/toolchains/llvm/prebuilt/linux-x86_64" >> $GITHUB_ENV
           echo "PATH=$ANDROID_NDK/toolchains/llvm/prebuilt/linux-x86_64/bin:$PATH" >> $GITHUB_ENV
-
       - name: Configure and build OpenSSL
         working-directory: ./openssl
         env:
-          ANDROID_NDK: ${{ env.ANDROID_NDK }}
+          ANDROID_NDK: ${{ steps.setup-ndk.ndk-path }}
         run: |
           export PATH="$TOOLCHAIN/bin:$PATH"
           export CC=${{ matrix.triple }}${API}-clang
