@@ -75,6 +75,7 @@ jobs:
         with:
           ndk-version: r26d
           local-cache: false
+          add-to-path: true
         #run: |
         #  curl -L https://dl.google.com/android/repository/android-ndk-r26d-linux.zip -o ndk.zip
         #  unzip -q ndk.zip
@@ -87,6 +88,7 @@ jobs:
         run: |
           echo $ANDROID_NDK_HOME
           echo $PWD
+          source <(cargo ndk-env)
           ls -lah
           echo "----"
           ls -lah ./*
