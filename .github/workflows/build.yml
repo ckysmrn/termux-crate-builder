@@ -85,7 +85,8 @@ jobs:
         env:
           OPENSSL_DIR: /usr/include/openssl/
           OPENSSL_INCLUDE_DIR: /usr/include/
-          RUST_BACKTRACE: 1
+          OPENSSL_NO_VENDOR: 1
+          RUST_BACKTRACE: full
         #  ANDROID_NDK_HOME: ${{ steps.setup-ndk.outputs.ndk-path }}
         run: |
           echo $ANDROID_NDK_HOME
