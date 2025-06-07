@@ -50,9 +50,9 @@ jobs:
           - arch: x86
             abi: x86
             target: i686-linux-android
-    uses: ckysmrn/termux-crate-builder/.github/workflows/build-openssl.yaml@main
-    with:
-      version: '0.10'
+      uses: ckysmrn/termux-crate-builder/.github/workflows/build-openssl.yaml@main
+      with:
+        version: '0.10'
 
     steps:
       - name: Install Dependencies
