@@ -84,6 +84,7 @@ jobs:
         working-directory: ./external-crate
         env:
           OPENSSL_DIR: /usr/include/openssl
+          OPENSSL_INCLUDE_DIR: /usr/include/openssl
         #  ANDROID_NDK_HOME: ${{ steps.setup-ndk.outputs.ndk-path }}
         run: |
           echo $ANDROID_NDK_HOME
