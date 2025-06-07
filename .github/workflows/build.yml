@@ -133,6 +133,8 @@ jobs:
             ARGS="$ARGS --features '${{ github.event.inputs.features }}'"
           fi
           echo "Building with: cargo ndk -t ${{ matrix.target }} -o ./target/ndk-build $ARGS"
+          echo "Installing target: ${{ matrix.target }}"
+          rustup target install ${{ matrix.target }}
           eval cargo ndk -t ${{ matrix.target }} -o ./target/ndk-build $ARGS
 
       - name: Detect binary name (for crates.io)
