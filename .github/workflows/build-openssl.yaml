@@ -89,10 +89,11 @@ jobs:
           ./Configure $CONFIGURE_TARGET no-shared no-unit-test --prefix=$PWD/build/${{ matrix.abi }}
           make -j$(nproc)
           make install_sw
-          tree -a
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: openssl-${{ matrix.abi }}
           path: openssl/build/${{ matrix.abi }}
+      - name: Check
+        run: tree -a
