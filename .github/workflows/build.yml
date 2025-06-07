@@ -87,6 +87,7 @@ jobs:
         run: |
           echo $ANDROID_NDK_HOME
           echo $PWD
+          echo "OPENSSL_DIR=/usr/include/openssl" >> $GITHUB_ENV
           source <(cargo ndk-env)
           ls -lah
           echo "----"
