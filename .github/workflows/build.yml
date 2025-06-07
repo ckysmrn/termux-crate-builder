@@ -27,13 +27,12 @@ on:
         default: false
 
 jobs:
-#  build-openssl:
-#    uses: ckysmrn/termux-crate-builder/.github/workflows/build-openssl.yaml@main
-#    with:
-#      version: '0.10'
-#  build:
-#    runs-on: ubuntu-latest
-
+  build-openssl:
+    uses: ckysmrn/termux-crate-builder/.github/workflows/build-openssl.yaml@main
+    with:
+      version: '0.10'
+  build:
+    runs-on: ubuntu-latest
     strategy:
       matrix:
         arch: [armeabi-v7a, arm64-v8a, x86, x86_64]
@@ -50,7 +49,6 @@ jobs:
           - arch: x86
             abi: x86
             target: i686-linux-android
-
     steps:
       - name: Install Dependencies
         run: |
