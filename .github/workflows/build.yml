@@ -88,6 +88,7 @@ jobs:
           echo $ANDROID_NDK_HOME
           echo $PWD
           echo "OPENSSL_DIR=/usr/include/openssl" >> $GITHUB_ENV
+          echo "OPENSSL_DIR=$OPENSSL_DIR"
           source <(cargo ndk-env)
           ls -lah
           echo "----"
@@ -111,7 +112,7 @@ jobs:
             ARGS="$ARGS --features '${{ github.event.inputs.features }}'"
           fi
           echo "Building with: cargo ndk -t ${{ matrix.target }} -o ./target/ndk-build $ARGS"
-          eval cargo ndk -t ${{ matrix.target }} -o ./target/ndk-build $ARGS
+          cargo ndk -t ${{ matrix.target }} -o ./target/ndk-build $ARGS
 
       - name: Detect binary name (for crates.io)
         if: env.BIN_NAME != ''
