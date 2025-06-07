@@ -112,7 +112,7 @@ jobs:
             ARGS="$ARGS --features '${{ github.event.inputs.features }}'"
           fi
           echo "Building with: cargo ndk -t ${{ matrix.target }} -o ./target/ndk-build $ARGS"
-          cargo ndk -t ${{ matrix.target }} -o ./target/ndk-build $ARGS
+          eval cargo ndk -t ${{ matrix.target }} -o ./target/ndk-build $ARGS
 
       - name: Detect binary name (for crates.io)
         if: env.BIN_NAME != ''
