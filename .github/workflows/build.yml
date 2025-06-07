@@ -43,7 +43,7 @@ jobs:
           sudo apt update
           sudo apt install -y curl unzip tar build-essential gcc pkg-config fakeroot libssl-dev
           cargo install cargo-ndk
-          cargo install cargo-edit
+          #cargo install cargo-edit
       - name: Prepare project
         run: |
           mkdir -p external-crate
