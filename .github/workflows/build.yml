@@ -82,8 +82,8 @@ jobs:
         #  echo "ANDROID_NDK=$(pwd)/android-ndk-r26d" >> $GITHUB_ENV
       - name: Build with cargo-ndk
         working-directory: ./external-crate
-        env:
-          ANDROID_NDK_HOME: ${{ steps.setup-ndk.outputs.ndk-path }}
+        #env:
+        #  ANDROID_NDK_HOME: ${{ steps.setup-ndk.outputs.ndk-path }}
         run: |
           echo $ANDROID_NDK_HOME
           echo $PWD
