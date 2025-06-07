@@ -52,7 +52,7 @@ jobs:
 
       - name: Download OpenSSL
         run: |
-          curl -O https://www.openssl.org/source/openssl-${{ inputs.version }}.tar.gz
+          curl -LO https://www.openssl.org/source/openssl-${{ inputs.version }}.tar.gz
           tar -xf openssl-${{ inputs.version }}.tar.gz
           mv openssl-${{ inputs.version }} openssl
 
