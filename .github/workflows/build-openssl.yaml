@@ -62,10 +62,14 @@ jobs:
           echo "API=24" >> $GITHUB_ENV
           echo "TOOLCHAIN=$ANDROID_NDK/toolchains/llvm/prebuilt/linux-x86_64" >> $GITHUB_ENV
           echo "PATH=$ANDROID_NDK/toolchains/llvm/prebuilt/linux-x86_64/bin:$PATH" >> $GITHUB_ENV
+          apt-cache seaech pkg-config
       - name: Debug NDK
         env:
           ANDROID_NDK: ${{ steps.setup-ndk.outputs.ndk-path }}
-        run: tree -a $ANDROID_NDK
+        run: |
+          echo "CARGO_NDK_SYSROOT_PATH=$CARGO_NDK_SYSROOT_PATH"
+          echo "CARGO_NDK_SYSROOT_TARGET=$CARGO_NDK_SYSROOT_TARGET"
+          tree -a $CARGO_NDK_SYSROOT_PATH
       - name: Configure and build OpenSSL
         working-directory: ./openssl
         env:
