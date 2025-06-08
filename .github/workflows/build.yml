@@ -123,6 +123,9 @@ jobs:
           echo $PWD
           #echo "OPENSSL_DIR=/usr/include/openssl" >> $GITHUB_ENV
           echo "OPENSSL_DIR=$OPENSSL_DIR"
+          echo "CARGO_NDK_SYSROOT_PATH=$CARGO_NDK_SYSROOT_PATH"
+          echo "CARGO_NDK_SYSROOT_TARGET=$CARGO_NDK_SYSROOT_TARGET"
+          tree -a $CARGO_NDK_SYSROOT_PATH
           #sudo ln -s /usr/include/x86_64-linux-gnu/openssl/opensslconf.h /usr/include/openssl/opensslconf.h
           #sudo ln -s /usr/include/x86_64-linux-gnu/openssl/configuration.h /usr/include/openssl/configuration.h
           source <(cargo ndk-env)
