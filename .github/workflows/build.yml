@@ -130,6 +130,8 @@ jobs:
           test -d $SYSROOT && tree -a $SYSROOT || true
           #sudo ln -s /usr/include/x86_64-linux-gnu/openssl/opensslconf.h /usr/include/openssl/opensslconf.h
           #sudo ln -s /usr/include/x86_64-linux-gnu/openssl/configuration.h /usr/include/openssl/configuration.h
+          echo "---- cargo ndk-env -----"
+          cargo ndk-env
           source <(cargo ndk-env)
           ls -lah
           echo "----"
