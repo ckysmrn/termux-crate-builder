@@ -99,6 +99,8 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           path: openssl/build
+      - name: Set PKG_CONFIG_LIBDIR
+        run: echo "PKG_CONFIG_LIBDIR=${GITHUB_WORKSPACE}/openssl/build/${{ matrix.arch }}/lib/pkgconfig" >> $GITHUB_ENV
       - name: Build with cargo-ndk
         working-directory: ./external-crate
         env:
