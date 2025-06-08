@@ -73,6 +73,8 @@ jobs:
             mv wrapper external-crate
           fi
           dpkg -L libssl-dev
+          echo "-----------------"
+          tree -a
       - name: Set up Rust
         uses: actions-rs/toolchain@v1
         with:
