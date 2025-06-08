@@ -63,7 +63,9 @@ jobs:
           echo "TOOLCHAIN=$ANDROID_NDK/toolchains/llvm/prebuilt/linux-x86_64" >> $GITHUB_ENV
           echo "PATH=$ANDROID_NDK/toolchains/llvm/prebuilt/linux-x86_64/bin:$PATH" >> $GITHUB_ENV
       - name: Debug NDK
-        run: tree -a ${{ steps.setup-ndk.ndk-path }}
+        env:
+          ANDROID_NDK: ${{ steps.setup-ndk.ndk-path }}
+        run: tree -a $ANDROID_NDK
       - name: Configure and build OpenSSL
         working-directory: ./openssl
         env:
