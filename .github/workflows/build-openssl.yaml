@@ -71,7 +71,7 @@ jobs:
           echo "CARGO_NDK_SYSROOT_PATH=$CARGO_NDK_SYSROOT_PATH"
           echo "CARGO_NDK_SYSROOT_TARGET=$CARGO_NDK_SYSROOT_TARGET"
           echo "SYSROOT=$SYSROOT"
-          test -d "$SYSROOT" && tree -a $SYSROOT
+          test -d "$SYSROOT" && tree -a $SYSROOT || true
       - name: Configure and build OpenSSL
         working-directory: ./openssl
         env:
