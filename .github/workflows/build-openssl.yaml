@@ -69,7 +69,7 @@ jobs:
           ANDROID_NDK: ${{ steps.setup-ndk.outputs.ndk-path }}
         run: |
           echo "CARGO_NDK_SYSROOT_PATH=$CARGO_NDK_SYSROOT_PATH"
-          echo "CARGO_NDK_SYSROOT_TARGET=$CARGO_NDK_SYSROOT_TARGET
+          echo "CARGO_NDK_SYSROOT_TARGET=$CARGO_NDK_SYSROOT_TARGET"
           echo "SYSROOT=$SYSROOT"
           test -d "$SYSROOT" && tree -a $SYSROOT
       - name: Configure and build OpenSSL
