@@ -123,15 +123,13 @@ jobs:
           echo $PWD
           #echo "OPENSSL_DIR=/usr/include/openssl" >> $GITHUB_ENV
           echo "OPENSSL_DIR=$OPENSSL_DIR"
-          SYSROOT=$ANDROID_NDK_HOME/sysroot
-          echo "SYSROOT=$SYSROOT"
-          test -d $SYSROOT && tree -a $SYSROOT || true
           #sudo ln -s /usr/include/x86_64-linux-gnu/openssl/opensslconf.h /usr/include/openssl/opensslconf.h
           #sudo ln -s /usr/include/x86_64-linux-gnu/openssl/configuration.h /usr/include/openssl/configuration.h
           echo "---- cargo ndk-env -----"
           source <(cargo ndk-env)
           echo "CARGO_NDK_SYSROOT_PATH=$CARGO_NDK_SYSROOT_PATH"
           echo "CARGO_NDK_SYSROOT_TARGET=$CARGO_NDK_SYSROOT_TARGET"
+          test -d $CARGO_NDK_SYSROOT_PATH && tree -a $CARGO_NDK_SYSROOT_PATH || true
           ls -lah
           echo "----"
           ls -lah ./*
