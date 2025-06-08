@@ -50,7 +50,7 @@ jobs:
         with:
           ndk-version: r26d
           add-to-path: true
-
+          local-cache: true
       - name: Download OpenSSL
         run: |
           curl -LO https://www.openssl.org/source/openssl-${{ inputs.version }}.tar.gz
