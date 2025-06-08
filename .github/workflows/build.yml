@@ -54,7 +54,7 @@ jobs:
       - name: Install Dependencies
         run: |
           sudo apt update
-          sudo apt install -y curl unzip tar build-essential gcc pkg-config fakeroot libssl-dev
+          sudo apt install -y curl unzip tar build-essential gcc pkg-config fakeroot libssl-dev libgpg-error-dev
           cargo install cargo-ndk
           #cargo install cargo-edit
       - name: Prepare project
@@ -73,6 +73,8 @@ jobs:
             mv wrapper external-crate
           fi
           dpkg -L libssl-dev
+          echo "-----------------"
+          dpkg -L libgpg-error-dev
           echo "-----------------"
           tree -a
       - name: Set up Rust
