@@ -64,12 +64,12 @@ jobs:
           echo "PATH=$ANDROID_NDK/toolchains/llvm/prebuilt/linux-x86_64/bin:$PATH" >> $GITHUB_ENV
       - name: Debug NDK
         env:
-          ANDROID_NDK: ${{ steps.setup-ndk.ndk-path }}
+          ANDROID_NDK: ${{ steps.setup-ndk.outputs.ndk-path }}
         run: tree -a $ANDROID_NDK
       - name: Configure and build OpenSSL
         working-directory: ./openssl
         env:
-          ANDROID_NDK: ${{ steps.setup-ndk.ndk-path }}
+          ANDROID_NDK: ${{ steps.setup-ndk.outputs.ndk-path }}
         run: |
           export PATH="$TOOLCHAIN/bin:$PATH"
           export CC=${{ matrix.triple }}${API}-clang
